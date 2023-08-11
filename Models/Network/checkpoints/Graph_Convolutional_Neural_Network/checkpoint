@@ -1,0 +1,6 @@
+model_checkpoint_path: "C:\\Users\\coffe\\EEG-DL\\Models\\Network\\lib_for_GCN\\..\\checkpoints\\Graph_Convolutional_Neural_Network\\model-10200"
+all_model_checkpoint_paths: "C:\\Users\\coffe\\EEG-DL\\Models\\Network\\lib_for_GCN\\..\\checkpoints\\Graph_Convolutional_Neural_Network\\model-9800"
+all_model_checkpoint_paths: "C:\\Users\\coffe\\EEG-DL\\Models\\Network\\lib_for_GCN\\..\\checkpoints\\Graph_Convolutional_Neural_Network\\model-9900"
+all_model_checkpoint_paths: "C:\\Users\\coffe\\EEG-DL\\Models\\Network\\lib_for_GCN\\..\\checkpoints\\Graph_Convolutional_Neural_Network\\model-10000"
+all_model_checkpoint_paths: "C:\\Users\\coffe\\EEG-DL\\Models\\Network\\lib_for_GCN\\..\\checkpoints\\Graph_Convolutional_Neural_Network\\model-10100"
+all_model_checkpoint_paths: "C:\\Users\\coffe\\EEG-DL\\Models\\Network\\lib_for_GCN\\..\\checkpoints\\Graph_Convolutional_Neural_Network\\model-10200"

@@ -337,10 +337,16 @@ class base_model(object):
         losses     = []
         indices = collections.deque()
         num_steps = int(self.num_epochs * train_data.shape[0] / self.batch_size)
+
+        # My Understanding:
+        #   Each step, the model is trained on a batch of data, batch_size in length (1024 samples by default)
+        #   The batch consists of randomly chosen samples (basically shuffled)
+        #   BUT
+        #   Validation and Train data are separated before shuffling
         for step in range(1, num_steps + 1):
             # Be sure to have used all the samples before using one a second time.
             if len(indices) < self.batch_size:
-                indices.extend(np.random.permutation(train_data.shape[0]))
+                indices.extend(np.random.permutation(train_data.shape[0])) 
             idx = [indices.popleft() for i in range(self.batch_size)]
             batch_data, batch_labels = train_data[idx, :], train_labels[idx]
             if type(batch_data) is not np.ndarray:
@@ -527,11 +533,11 @@ class base_model(object):
             op_gradients = optimizer.apply_gradients(grads, global_step=global_step)
 
             # Histograms.
-            for grad, var in grads:
-                if grad is None:
-                    print('warning: {} has no gradient'.format(var.op.name))
-                else:
-                    tf.summary.histogram(var.op.name + '/gradients', grad)
+            # for grad, var in grads:
+            #     if grad is None:
+            #         print('warning: {} has no gradient'.format(var.op.name))
+            #     else:
+            #         tf.summary.histogram(var.op.name + '/gradients', grad)
 
             # The op return the learning rate.
             with tf.control_dependencies([op_gradients]):
@@ -556,7 +562,7 @@ class base_model(object):
         var = tf.get_variable('weights', shape, tf.float32, initializer=initial)
         if regularization:
             self.regularizers.append(tf.nn.l2_loss(var))
-        tf.summary.histogram(var.op.name, var)
+        # tf.summary.histogram(var.op.name, var)
         return var
 
     def _bias_variable(self, shape, regularization=True):
@@ -564,7 +570,7 @@ class base_model(object):
         var = tf.get_variable('bias', shape, tf.float32, initializer=initial)
         if regularization:
             self.regularizers.append(tf.nn.l2_loss(var))
-        tf.summary.histogram(var.op.name, var)
+        # tf.summary.histogram(var.op.name, var)
         return var
 
     def _conv2d(self, x, W):

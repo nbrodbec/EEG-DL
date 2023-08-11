@@ -42,7 +42,7 @@ def DatasetLoader(DIR):
     # If you met the below error:
     # ValueError: Cannot feed value of shape (1024, 1) for Tensor 'input/label:0', which has shape '(1024,)'
     # Then you have to uncomment the below code:
-    # train_labels = np.squeeze(train_labels)
+    train_labels = np.squeeze(train_labels)
     
     # Read Testing Data and Labels
     test_data = pd.read_csv(DIR + 'test_set.csv', header=None)
@@ -53,6 +53,6 @@ def DatasetLoader(DIR):
     # If you met the below error:
     # ValueError: Cannot feed value of shape (1024, 1) for Tensor 'input/label:0', which has shape '(1024,)'
     # Then you have to uncomment the below code:
-    # test_labels = np.squeeze(test_labels)
+    test_labels = np.squeeze(test_labels)
 
     return train_data, train_labels, test_data, test_labels

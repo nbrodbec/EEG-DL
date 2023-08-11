@@ -206,8 +206,9 @@ def load_raw_data(electrodes, subject=None, num_classes=4, long_edge=False):
             labels.append(l)
         except:
             pass
-    return np.array(trials, dtype=np.float64).reshape((len(trials),) + trials[0].shape + (1,)), \
-           np.array(labels, dtype=np.float64)
+    # What's going on here
+    return np.array(trials, dtype=np.float64).reshape((len(trials),) + trials[0].shape + (1,)), \ 
+           np.array(labels, dtype=np.float64) 
 
 
 def butter_bandpass(lowcut, highcut, fs, order=5):
