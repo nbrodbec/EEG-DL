@@ -47,11 +47,8 @@ for i in range(2, 21):
 # np.random.shuffle(all)
 
 # Unshuffled
-
 data = all[:, :64]
-# data = data - data.mean(axis=1, keepdims=True)
 labels = all[:, 64]
-
 train_data, test_data, train_labels, test_labels = train_test_split(data, labels)
 
 # Read the Adjacency matrix
@@ -70,7 +67,7 @@ L = [graph.laplacian(Adjacency_Matrix, normalized=True) for Adjacency_Matrix in 
 # Hyper-parameters
 params = dict()
 params['dir_name']       = Model
-params['num_epochs']     = 10
+params['num_epochs']     = 10               # Lower num_epochs -> faster training time, poorer results
 params['batch_size']     = 1024
 params['eval_frequency'] = 100
 
@@ -88,7 +85,7 @@ params['M'] = [5]                          # Output dimensionality of fully conn
 # Optimization.
 params['regularization'] = 0.001     # L2 regularization
 params['dropout']        = 0.50      # Dropout rate
-params['learning_rate']  = 0.0001     # Learning rate; default = 0.000001
+params['learning_rate']  = 0.0001     # Learning rate
 params['decay_rate']     = 1         # Learning rate Decay == 1 means no Decay
 params['momentum']       = 0         # momentum == 0 means Use Adam Optimizer
 params['decay_steps']    = np.shape(train_data)[0] / params['batch_size']
@@ -98,6 +95,7 @@ params['decay_steps']    = np.shape(train_data)[0] / params['batch_size']
 model = GCN_Model.cgcnn(L, **params)
 accuracy, loss, t_step = model.fit(X_train, train_labels, X_test, test_labels)
 
+# Test model
 y_test = test_labels
 y_pred = model.predict(X_test)
 
