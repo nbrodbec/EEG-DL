@@ -39,17 +39,44 @@ SAVE = 'Saved_Files/' + Model + '/'
 if not os.path.exists(SAVE):  # If the SAVE folder doesn't exist, create one
     os.mkdir(SAVE)
 
-all = extract_data_edf('S001')
-for i in range(2, 21):
-	all = np.append(all, extract_data_edf('S{}'.format(str(i).zfill(3))), axis=0)
+train = extract_data_edf('S001')
+for i in range(2, 11):
+	train = np.append(train, extract_data_edf('S{}'.format(str(i).zfill(3))), axis=0)
+        
+val = extract_data_edf('S021')
+for i in range(22, 24):
+	val = np.append(val, extract_data_edf('S{}'.format(str(i).zfill(3))), axis=0)
+	
+test = extract_data_edf('S024')
+for i in range(25, 27):
+	test = np.append(test, extract_data_edf('S{}'.format(str(i).zfill(3))), axis=0)
 
 # Shuffled
 # np.random.shuffle(all)
 
+
+
 # Unshuffled
-data = all[:, :64]
-labels = all[:, 64]
-train_data, test_data, train_labels, test_labels = train_test_split(data, labels)
+# data = all[:, :64]
+# labels = all[:, 64]
+# train_data, test_data, train_labels, test_labels = train_test_split(data, labels)
+
+
+
+# Inter-subject
+train_data = train[:, :64]
+train_data = train_data - train_data.mean(axis=1, keepdims=True)
+train_labels = train[:, 64]
+
+val_data = val[:, :64]
+val_data = val_data - val_data.mean(axis=1, keepdims=True)
+val_labels = val[:, 64]
+
+test_data = test[:, :64]
+test_data = test_data - test_data.mean(axis=1, keepdims=True)
+test_labels = test[:, 64]
+
+
 
 # Read the Adjacency matrix
 Adjacency_Matrix = pd.read_csv(DIR + 'Adjacency_Matrix.csv', header=None)
@@ -60,6 +87,7 @@ Adjacency_Matrix = sparse.csr_matrix(Adjacency_Matrix)
 graphs, perm = coarsening.coarsen(Adjacency_Matrix, levels=5, self_connections=False)
 X_train = coarsening.perm_data(train_data, perm)
 X_test  = coarsening.perm_data(test_data,  perm)
+X_val = coarsening.perm_data(val_data, perm)
 
 # Obtain the Graph Laplacian
 L = [graph.laplacian(Adjacency_Matrix, normalized=True) for Adjacency_Matrix in graphs]
@@ -67,7 +95,7 @@ L = [graph.laplacian(Adjacency_Matrix, normalized=True) for Adjacency_Matrix in 
 # Hyper-parameters
 params = dict()
 params['dir_name']       = Model
-params['num_epochs']     = 10               # Lower num_epochs -> faster training time, poorer results
+params['num_epochs']     = 5               # Lower num_epochs -> faster training time, poorer results
 params['batch_size']     = 1024
 params['eval_frequency'] = 100
 
@@ -93,7 +121,7 @@ params['decay_steps']    = np.shape(train_data)[0] / params['batch_size']
 
 # Train model
 model = GCN_Model.cgcnn(L, **params)
-accuracy, loss, t_step = model.fit(X_train, train_labels, X_test, test_labels)
+accuracy, loss, t_step = model.fit(X_train, train_labels, X_val, val_labels)
 
 # Test model
 y_test = test_labels
@@ -101,6 +129,6 @@ y_pred = model.predict(X_test)
 
 print(f'Test accuracy: {accuracy_score(y_test, y_pred)}')
 
-classes_used = [0, 1, 2, 3, 4]
-class_map = {0: 'Rest', 1: 'Left Fist', 2: 'Right Fist', 3: 'Both Fists', 4: 'Both Feet'}
+classes_used = [1, 2, 3, 4]
+class_map = {1: 'Left Fist', 2: 'Right Fist', 3: 'Both Fists', 4: 'Both Feet'}
 cm_analysis(y_test, y_pred, labels=classes_used, ymap=class_map)
