@@ -2,3 +2,5 @@
 *.mat
 *.csv
 *.png
+Saved_Files/**/*
+Models/Network/checkpoints/**/*
