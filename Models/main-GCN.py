@@ -21,7 +21,7 @@ from Download_Raw_EEG_Data.physionet_dataset import extract_data_edf
 from Models.Util.cm import cm_analysis
 from sklearn.metrics import accuracy_score
 import matplotlib.pyplot as plt
-from train_test_split import train_test_split
+from Dataset_Utilities.train_test_split import train_test_split
 
 # Model Name
 Model = 'Graph_Convolutional_Neural_Network'
