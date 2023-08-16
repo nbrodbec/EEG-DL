@@ -25,7 +25,7 @@ def get_physionet_dataset():
                 file = requests.get(fileUrl)
                 open(basePath + subject + '/' + trial, 'wb').write(file.content)
 
-def extract_data_edf(subject, files=[4, 6, 8, 10, 12, 14]):
+def extract_data_edf(subject, files=range(1, 15)):
     '''
     This function extracts all the data from one patient, and appends the appropriate labels for each file.
     Note that one of the papers excluded the trials from subject 89 due to differences in the recording results,
@@ -67,7 +67,8 @@ def extract_data_edf(subject, files=[4, 6, 8, 10, 12, 14]):
             note = annotation[2].decode('utf-8')
             label = 0
             if note == 'T0':
-                label = 0
+                continue
+                # label = 0
             elif note == 'T1':
                 if i in checkRun:
                     label = 1
